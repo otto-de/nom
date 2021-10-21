@@ -1,4 +1,4 @@
-(defproject de.otto/nom "0.1.0"
+(defproject de.otto/nom "0.1.1-SNAPSHOT"
   :description "Utilities for working with the happy path in the face of anomalies."
   :url "https://github.com/otto-de/nom"
   :license {:name "Apache License 2.0"
