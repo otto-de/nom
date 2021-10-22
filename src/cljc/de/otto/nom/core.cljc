@@ -251,3 +251,15 @@
              (let-nom> [~@more]
                ~@body)))))
     `(do ~@body)))
+
+;;; Recovering
+
+(defmacro with-default
+  "Evaluates `form` and returns the result, unless it is an anomaly, in which case
+  the anomaly is bound (possibly destructured) to `v`, the body evaluated, and
+  that returned."
+  [[v form] & body]
+  `(let [r# ~form]
+     (if-let [~v (some-abomination r#)]
+       (do ~@body)
+       r#)))

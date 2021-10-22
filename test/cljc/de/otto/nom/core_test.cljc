@@ -398,3 +398,29 @@
       (testing "Then the result should short-circuit to the anomaly"
         (is (= [::nom/anomaly :div-by-zero]
                r))))))
+
+;; default
+
+(deftest with-default-should-pass-on-success
+  (testing "When the result is not an anomaly"
+    (let [r 3
+          a (atom 0)]
+      (testing "Then with-default should pass it through"
+        (is (= 3
+               (nom/with-default [b r]
+                 (swap! a inc)
+                 (str "ah well, " b ", nevermind")))))
+      (testing "And the body should not be evaluated"
+        (is (zero? @a))))))
+
+(deftest with-default-should-evaluate-body-on-anomaly
+  (testing "When the result is an anomaly"
+    (let [r (nom/fail :something :foo 5)
+          a (atom 0)]
+      (testing "Then with-default should evaluate the body for a return value"
+        (is (= "ah well, 5, nevermind"
+               (nom/with-default [[_ _ {:keys [foo]}] r]
+                 (swap! a inc)
+                 (str "ah well, " foo ", nevermind")))))
+      (testing "And the body should have been evaluated"
+        (is (= 1 @a))))))
