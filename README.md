@@ -33,10 +33,27 @@ You can create a nom anomaly using `fail`:
 
     (nom/fail ::my-category {:some data})
 
+or
+
+    (nom/fail ::my-category :some data)
+
+which both produce the same:
+
+    [::nom/anomaly ::my-category {:some data}]
+
 Our own anomaly format is a bit different from the `cognitect.anomalies` format,
 but those are recognized too and automatically adapted.  In order to extend this
 behaviour to your own anomaly formats, extend the `abominable?` and `adapt`
-multimethods using a proper predicate.
+multimethods using a proper predicate, e. g.:
+
+    (defn my-anomaly? [x]
+      ...whatever...)
+
+    (defmethod nom/abominable? my-anomaly? [_]
+      true)
+
+    (defmethod nom/adapt my-anomaly? [x]
+      (nom/fail (yaba x) :daba (doo x)))
 
 ### Propagation
 
