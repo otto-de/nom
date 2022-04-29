@@ -132,6 +132,15 @@
           (testing "Then the result should be the result of calling f"
             (is (= r (/ 5 2)))))))))
 
+(deftest nom*-should-adapt-anomalies-returned-by-f
+  (testing "Given a homal value and a function that returns a non-nom anomaly"
+    (let [arg 5
+          f (fn [_] {:cognitect.anomalies/category :you-fool})]
+      (testing "When f returns that anomaly"
+        (let [r (nom/nom* f arg)]
+          (testing "Then the result is adapted to a nom-anomaly."
+            (is (= [::nom/anomaly :you-fool {}] r))))))))
+
 ;; nom
 
 (deftest nom-should-fail-if-any-arg-is-anomal
@@ -152,6 +161,15 @@
         (let [r (nom/nom f arg)]
           (testing "Then the result should be the result of calling f"
             (is (= r (/ 5 2)))))))))
+
+(deftest nom-should-adapt-anomalies-returned-by-f
+  (testing "Given a homal value and a function that returns a non-nom anomaly"
+    (let [arg 5
+          f (fn [_] {:cognitect.anomalies/category :you-fool})]
+      (testing "When f returns that anomaly"
+        (let [r (nom/nom f arg)]
+          (testing "Then the result is adapted to a nom-anomaly."
+            (is (= [::nom/anomaly :you-fool {}] r))))))))
 
 ;; with-nom
 

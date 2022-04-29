@@ -112,7 +112,9 @@
   [f & args]
   (if-let [anomaly (cl-find-if abominable? args)]
     (adapt anomaly)
-    (apply f args)))
+    (let [r (apply f args)]
+      (cond-> r
+        (abominable? r) adapt))))
 
 (defmacro nom
   "Macro version of `nom*`.  Checks all the values given in the form.  If any
@@ -129,7 +131,9 @@
     `(let [~@(mapcat vector syms forms)]
        (if-let [anomaly# (cl-find-if abominable? [~@syms])]
          (adapt anomaly#)
-         (~@syms)))))
+         (let [r# (~@syms)]
+           (cond-> r#
+             (abominable? r#) adapt))))))
 
 (defmacro with-nom
   "Takes a vector of forms to check and a body.  If any of the checked forms
