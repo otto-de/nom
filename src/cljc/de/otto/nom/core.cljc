@@ -267,3 +267,22 @@
      (if-let [~v (some-abomination r#)]
        (do ~@body)
        r#)))
+
+(defn throw-anomaly
+  "Throws an ExceptionInfo in Clojure and js/Error in ClojureScript when an anomaly occurs in `x`, with anomaly kind as
+  exception/error message and anomaly payload as exception/error data.
+
+  Usage:
+
+  (throw-anomaly (fail :something-not-found {:status 404 :msg \"not found\"}))
+  ; => Execution error (ExceptionInfo) at ...
+  ; => Anomaly returned: something-not-found
+  "
+  [x]
+  (if (anomaly? x)
+    #?(:clj (throw (ex-info
+                    (format "Anomaly returned: %s" (-> x kind name))
+                    (payload x)))
+       :cljs (throw (js/Error. (str "Anomaly returned:"  (-> x kind name))
+                               (payload x))))
+    x))

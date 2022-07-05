@@ -1,7 +1,9 @@
 (ns de.otto.nom.core-test
   (:require [de.otto.nom.core :as nom]
             #?(:clj [clojure.test :refer [deftest is testing]]
-               :cljs [cljs.test :refer-macros [deftest is testing]])))
+               :cljs [cljs.test :refer-macros [deftest is testing]]))
+  (:import
+   #?(:clj [clojure.lang ExceptionInfo])))
 
 (defn random-id []
   (str (rand-int 1073741824)))
@@ -442,3 +444,14 @@
                  (str "ah well, " foo ", nevermind")))))
       (testing "And the body should have been evaluated"
         (is (= 1 @a))))))
+
+(deftest throw-anomaly-should-throw-an-exception-on-anomalies
+  (testing "When there is an anomaly"
+    (let [category :the-exception
+          payload {:msg 42}
+          ex-pattern (re-pattern (str "Anomaly returned: " (name category)))
+          failed (nom/fail category payload)]
+      (is (thrown-with-msg? #?(:clj ExceptionInfo :cljs js/Error) ex-pattern failed))))
+  (testing "When there is no anomaly should return result"
+    (let [result {:msg 42}]
+      (is (= result (nom/throw-anomaly result))))))
