@@ -451,7 +451,9 @@
           payload {:msg 42}
           ex-pattern (re-pattern (str "Anomaly returned: " (name category)))
           failed (nom/fail category payload)]
-      (is (thrown-with-msg? #?(:clj ExceptionInfo :cljs js/Error) ex-pattern failed))))
+      (is (thrown-with-msg? #?(:clj ExceptionInfo :cljs js/Error)
+                            ex-pattern
+                            (nom/throw-anomaly failed)))))
   (testing "When there is no anomaly should return result"
     (let [result {:msg 42}]
       (is (= result (nom/throw-anomaly result))))))
