@@ -23,7 +23,7 @@ level of an HTTP handler.
 
 ## Usage
 
-Dependency: `[de.otto/nom "0.2.0"]`
+Dependency: `[de.otto/nom "0.3.0"]`
 
 Require: `[de.otto.nom.core :as nom]`
 
