@@ -31,21 +31,28 @@ Require: `[de.otto.nom.core :as nom]`
 
 You can create a nom anomaly using `fail`:
 
+```clojure
     (nom/fail ::my-category {:some data})
+```
 
 or
 
+```clojure
     (nom/fail ::my-category :some data)
+```
 
 which both produce the same:
 
+```clojure
     [::nom/anomaly ::my-category {:some data}]
+```
 
 Our own anomaly format is a bit different from the `cognitect.anomalies` format,
 but those are recognized too and automatically adapted.  In order to extend this
 behaviour to your own anomaly formats, extend the `abominable?` and `adapt`
 multimethods using a proper predicate, e. g.:
 
+```clojure
     (defn my-anomaly? [x]
       ...whatever...)
 
@@ -54,17 +61,22 @@ multimethods using a proper predicate, e. g.:
 
     (defmethod nom/adapt my-anomaly? [x]
       (nom/fail (yaba x) :daba (doo x)))
+```
 
 ### Propagation
 
 The basic principle is maybe best illustrated by showing `nom`.  If you have a
 form like this:
 
+```clojure
     (foo arg0 arg1)
+```
 
 where both `arg0` or `arg1` might be anomalies, then you can prepend `nom`:
 
+```clojure
     (nom/nom foo arg0 arg1)
+```
 
 which does the same as the form above, but if `arg0` or `arg1` is an anomaly,
 then it will immediately return that anomaly and not call `foo` at all.
@@ -72,17 +84,21 @@ then it will immediately return that anomaly and not call `foo` at all.
 You can do this in a threading manner very similar to `some->` and `some->>`,
 with `nom->` and `nom->>`:
 
+```clojure
     (nom/nom-> foo
                (bar baz)
                quux
                (wizzle wozzle))
+```
 
 which would be equivalent to:
 
+```clojure
     (nom/nom wizzle
              (nom/nom quux
                       (nom/nom bar foo baz))
              wozzle)
+```
 
 i. e. thread the values just as in `->`, but if any of the intermediate values
 is an anomaly, short-circuit and return that anomaly.
@@ -91,16 +107,20 @@ Another pattern is checking a number of values, then executing a body, but if
 any of the values is an anomaly, short-circuit and return the anomaly instead.
 That's what `with-nom` is for:
 
+```clojure
     (nom/with-nom [something (something else) (and another thing)]
       (frob something)
       (wozzle another thing))
+```
 
 Of course, this begs for binding those values; we have `let-nom>` for that:
 
+```clojure
     (nom/let-nom> [a something
                    b (something else)
                    c (and another thing)]
       (frob a b c))
+```
 
 This short-ciruits as soon as an anomaly is encountered in the bindings; in that
 case, no further binding nor the body is even evaluated.  You might want to have
