@@ -338,6 +338,11 @@
             (is (every? #(= [::nom/anomaly :div-by-zero] %)
                         r))))))))
 
+(deftest let-nom-should-work-with-macros
+  (testing "When using a macro in a let-nom binding it should work like in a normal let"
+    (nom/let-nom [foo (-> 1 (+ 1))]
+                 (is foo 2))))
+
 ;; let-nom>
 
 (deftest let-nom>-should-work-like-normal-let-if-no-anomaly
@@ -362,6 +367,11 @@
                     not executed, even if they do not depend on an anomaly"
             (is (= [::nom/anomaly :missing-node]
                    r))))))))
+
+(deftest let-nom>-should-work-with-macros
+  (testing "When using a macro in a let-nom> binding it should work like in a normal let"
+    (nom/let-nom> [foo (-> 1 (+ 1))]
+                  (is foo 2))))
 
 ;; nom->
 
