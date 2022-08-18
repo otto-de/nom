@@ -21,9 +21,13 @@
 (defn fail
   "Construct a new anomaly with the given `category`.  Accepts either keyword
   arguments or a map with further data.
-  Example: (= [::anomaly :nonono {:foo 1 :bar 2}]
+
+  Example:
+  ```
+  (= [::anomaly :nonono {:foo 1 :bar 2}]
               (fail :nonono :foo 1 :bar 2)
-              (fail :nonono {:foo 1 :bar 2}))"
+              (fail :nonono {:foo 1 :bar 2}))
+  ```"
   [category & more]
   ;; This map conversion can be inlined into the lambda list in Clojure 1.11
   (let [more-map (cond (map? (first more)) (first more)
@@ -121,8 +125,8 @@
   value is an anomaly, returns that anomaly.  Otherwise, evaluate the rest of
   the form (without the `nom`).
 
-  Example: (nom foo bar) — if any of nom, foo, or bar is an anomaly, returns
-  that; otherwise calls and returns (foo bar).
+  Example: `(nom foo bar)` — if any of nom, foo, or bar is an anomaly, returns
+  that; otherwise calls and returns `(foo bar)`.
 
   Because this is a macro that expands to a conditional and the wrapped form,
   arities are checked normally by compiler and runtime."
