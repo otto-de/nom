@@ -107,9 +107,18 @@ case, no further binding nor the body is even evaluated.  You might want to have
 anomalies propagate through the bindings instead and then do something about it
 in the body.  That's what `let-nom` (without the `>`) does.
 
+## Maintainers
+
+See [MAINTAINERS](MAINTAINERS).
+
+## Lifecyle status
+
+See [OSSMETADATA](OSSMETADATA).
+
 ## License
 
 Copyright © 2021 OTTO GmbH & Co. KG
 
 This program and the accompanying materials are made available under the terms
-of the Apache License 2.0, see https://www.apache.org/licenses/LICENSE-2.0.html
+of the Apache License 2.0, see the [LICENSE file](LICENSE) or
+https://www.apache.org/licenses/LICENSE-2.0.html
